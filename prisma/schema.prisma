@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Stand {
+  id         Int         @id @default(autoincrement())
+  nomorStand Int
+  pemilik    String
+  noHp       String
+  transaksis Transaksi[]
+}
+
+model Kasir {
+  id         Int         @id @default(autoincrement())
+  nama       String
+  noHp       String
+  email      String      @unique
+  password   String
+  transaksis Transaksi[]
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  nama     String
+  password String
+}
+
+model Transaksi {
+  id           Int    @id @default(autoincrement())
+  kasir        Kasir  @relation(fields: [idKasir], references: [id])
+  stand        Stand  @relation(fields: [idStand], references: [id])
+  nomorPesanan String
+  totalPesanan Int
+  idKasir      Int
+  idStand      Int
+}
