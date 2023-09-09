@@ -19,7 +19,6 @@ type loginAuth = {
 
 export async function loginAuth(email: string, password: string): Promise<loginAuth> {
     const findUser = await findUserByEmail(email);
-    const hashedPassword = hashPassword(password);
 
     let result: loginAuth = {
         status: "INVALID",
@@ -30,8 +29,8 @@ export async function loginAuth(email: string, password: string): Promise<loginA
         if (!findUser) {
             result.status = "NO_PASSWORD";
         } else {
-            const validate = await validatePassword(password, hashedPassword);
-            if (!validate) {
+            const validate = await validatePassword(password, findUser.password);
+            if (validate) {
                 result.status = "SUCCESS";
                 result.user = findUser;
             }

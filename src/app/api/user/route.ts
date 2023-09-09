@@ -1,10 +1,29 @@
-import { hashPassword } from "@/lib/passwordHash";
+import { authOptions } from "@/lib/auth";
+import { hashPassword, validatePassword } from "@/lib/passwordHash";
 import { prisma } from "@/lib/prisma";
+import { findUserByEmail, getAllUsers } from "@/lib/queries/userQueries";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+export const GET = async (req: NextRequest) => {
+    const queryParams = req.nextUrl.searchParams;
+    const email = queryParams?.get('email');
+
+    try {
+        if (!email) {
+            const users = await getAllUsers();
+            return NextResponse.json({ message: "success", users }, { status: 200 });
+        }
+
+        const getUserWithEmail = await findUserByEmail(email);
+        return NextResponse.json({ message: "success", user: getUserWithEmail }, { status: 200 });
+    } catch {
+        return NextResponse.json({ status: 500, message: 'internal server error' });
+    }
+};
 
 export async function POST(req: Request) {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (session?.user?.role != "ADMIN") {
         return NextResponse.json({ status: 403, message: 'forbidden' }, { status: 403 })
     }
