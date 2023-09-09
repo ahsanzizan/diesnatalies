@@ -35,7 +35,6 @@ export default function Login() {
 
       if (res?.error) {
         setLoading(false);
-        console.log(res.error);
         toast.error(
           res.error == "CredentialsSignin"
             ? "Email/Password Salah"
