@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -19,14 +20,16 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = async (req: Request) => {
+    const session = await getServerSession();
+
     try {
         const data = await req.formData();
-        const idKasir = 1; // Get from session
+        const idUser = Number(session?.user?.id); // Get from session
         const nomorPesanan = data.get('nomorPesanan') as string;
         const totalPesanan = Number(data.get('totalPesanan') as string);
         const idStand = Number(data.get('idStand') as string);
 
-        await prisma.transaksi.create({ data: { nomorPesanan, totalPesanan, idKasir, idStand } });
+        await prisma.transaksi.create({ data: { nomorPesanan, totalPesanan, idUser, idStand } });
 
         return NextResponse.json({ status: 200, message: 'sucess' }, { status: 200 });
     } catch {
@@ -36,6 +39,7 @@ export const POST = async (req: Request) => {
 
 export const PATCH = async (req: NextRequest) => {
     const queryParams = req.nextUrl.searchParams;
+    const session = await getServerSession();
     const id = Number(queryParams?.get('id'));
 
     if (!id) {
@@ -44,12 +48,12 @@ export const PATCH = async (req: NextRequest) => {
 
     try {
         const data = await req.formData();
-        const idKasir = 1; // Get from session
+        const idUser = Number(session?.user?.id); // Get from session
         const nomorPesanan = data.get('nomorPesanan') as string;
         const totalPesanan = Number(data.get('totalPesanan') as string);
         const idStand = Number(data.get('idStand') as string);
 
-        await prisma.transaksi.update({ where: { id }, data: { idKasir, nomorPesanan, totalPesanan, idStand } });
+        await prisma.transaksi.update({ where: { id }, data: { idUser, nomorPesanan, totalPesanan, idStand } });
         return NextResponse.json({ status: 200, message: 'success' });
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });
