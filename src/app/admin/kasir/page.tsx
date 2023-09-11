@@ -5,6 +5,8 @@ export default async function AllKasir() {
   const users = await getAllUsers();
   const kasirs = users?.filter((user) => user.role == "KASIR");
 
+  async function handleDelete() {}
+
   return (
     <>
       <div className="flex flex-col overflow-x-auto h-full">
@@ -27,6 +29,9 @@ export default async function AllKasir() {
                       Email
                     </th>
                     <th scope="col" className="px-6 py-4">
+                      HP
+                    </th>
+                    <th scope="col" className="px-6 py-4">
                       Username
                     </th>
                     <th scope="col" className="px-6 py-4">
@@ -43,15 +48,24 @@ export default async function AllKasir() {
                           {kasir.email}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {kasir.username}
+                          {kasir.noHp}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
+                          {kasir.username}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 flex gap-1">
                           <Link
                             href={`/admin/kasir/${kasir.id}`}
                             className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
                           >
                             Edit
                           </Link>
+                          <button
+                            onClick={handleDelete}
+                            className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     );
@@ -65,3 +79,5 @@ export default async function AllKasir() {
     </>
   );
 }
+
+export const revalidate = 0;

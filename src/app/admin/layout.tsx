@@ -1,18 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import { redirect } from "next/navigation";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [nav, setNav] = useState(false);
+
+  if (status !== "authenticated") {
+    return redirect("/auth/login");
+  }
 
   return (
     <>
