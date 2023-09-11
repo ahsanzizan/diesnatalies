@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
@@ -8,7 +7,7 @@ import { useState } from "react";
 import type { ChangeEvent } from "react";
 
 export default function Login() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -19,7 +18,11 @@ export default function Login() {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  if (status == "authenticated") return redirect("/");
+  if (status == "authenticated" && session.user?.role == "ADMIN")
+    return redirect("/admin");
+
+  if (status == "authenticated" && session.user?.role == "KASIR")
+    return redirect("/kasir");
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

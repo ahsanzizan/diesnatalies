@@ -1,5 +1,5 @@
 import { authOptions } from "@/lib/auth";
-import { hashPassword, validatePassword } from "@/lib/passwordHash";
+import { hashPassword } from "@/lib/passwordHash";
 import { prisma } from "@/lib/prisma";
 import { findUserByEmail, getAllUsers } from "@/lib/queries/userQueries";
 import { getServerSession } from "next-auth";
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     try {
         const data = await req.formData();
         const username = data.get('username') as string;
-        const noHp = data.get('noHp') as string;
+        const noHp = data.get('noHp') as string;  
         const password = hashPassword(data.get('password') as string);
         const email = data.get('email') as string;
 
