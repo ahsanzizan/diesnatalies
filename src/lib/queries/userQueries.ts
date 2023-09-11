@@ -1,4 +1,4 @@
-import { hashPassword, validatePassword } from "../passwordHash";
+import { validatePassword } from "../passwordHash";
 import { prisma } from "../prisma";
 import { User } from "@prisma/client";
 
@@ -40,4 +40,16 @@ export async function loginAuth(email: string, password: string): Promise<loginA
     }
 
     return result;
+}
+
+export async function deleteUser(id: number) {
+    const users = await prisma.user.findMany();
+    const findUser = users.find(user => user.id === id);
+    let res = null;
+
+    if (findUser) {
+        res = await prisma.user.delete({ where: { id } });
+    }
+
+    return res;
 }

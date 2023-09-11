@@ -54,7 +54,7 @@ export default async function AllKasir() {
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 flex gap-1">
                           <Link
-                            href={`/admin/kasir/${kasir.id}`}
+                            href={`/admin/kasir/edit/${kasir.id}`}
                             className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
                           >
                             Edit
