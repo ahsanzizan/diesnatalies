@@ -1,11 +1,10 @@
 import { getAllUsers } from "@/lib/queries/userQueries";
 import Link from "next/link";
+import DeleteButton from "./components/DeleteButton";
 
 export default async function AllKasir() {
   const users = await getAllUsers();
   const kasirs = users?.filter((user) => user.role == "KASIR");
-
-  async function handleDelete() {}
 
   return (
     <>
@@ -60,12 +59,7 @@ export default async function AllKasir() {
                           >
                             Edit
                           </Link>
-                          <button
-                            onClick={handleDelete}
-                            className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
-                          >
-                            Delete
-                          </button>
+                          <DeleteButton id={kasir.id} />
                         </td>
                       </tr>
                     );
