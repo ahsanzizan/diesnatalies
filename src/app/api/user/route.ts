@@ -20,7 +20,31 @@ export const GET = async (req: NextRequest) => {
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });
     }
-};
+}
+
+export async function PUT(req: NextRequest) {
+    const session = await getServerSession(authOptions);
+    const queryParams = req.nextUrl.searchParams;
+    const id = Number(queryParams?.get('id'));
+
+    if (session?.user?.role != "ADMIN") {
+        return NextResponse.json({ status: 403, message: 'forbidden' }, { status: 403 });
+    }
+
+    try {
+        const data = await req.formData();
+        const username = data.get('username') as string;
+        const noHp = data.get('noHp') as string;
+        const password = hashPassword(data.get('password') as string);
+        const email = data.get('email') as string;
+
+        await prisma.user.update({ where: { id }, data: { username, noHp, email, password } });
+        return NextResponse.json({ message: "success" }, { status: 200 });
+
+    } catch {
+        return NextResponse.json({ status: 500, message: "internal server error" }, { status: 500 });
+    }
+}
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
