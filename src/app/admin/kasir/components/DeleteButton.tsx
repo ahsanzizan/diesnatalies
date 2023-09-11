@@ -1,6 +1,7 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 type DeleteButtonProps = {
@@ -8,6 +9,9 @@ type DeleteButtonProps = {
 };
 
 export default function DeleteButton({ id }: DeleteButtonProps) {
+  const [suecces, setSuccess] = useState<boolean>(false);
+  const router = useRouter();
+
   async function handleDelete(e: React.FormEvent) {
     const toastId = toast.loading("Loading...");
 
@@ -16,15 +20,19 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
         method: "DELETE",
       }).then((res) => res.json());
 
-      if (deleteData.status != 200) {
+      if (deleteData.message != "success") {
         toast.error("Something wrong", { id: toastId });
       } else {
+        setSuccess(true);
         toast.success("Data sent successfully", { id: toastId });
-        return redirect("/admin/kasir");
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  if (suecces) {
+    router.refresh();
   }
 
   return (

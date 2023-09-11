@@ -13,7 +13,7 @@ export default function AdminLayout({
   const { data: session, status } = useSession();
   const [nav, setNav] = useState(false);
 
-  if (status !== "authenticated") {
+  if (session?.user?.role != "ADMIN") {
     return redirect("/auth/login");
   }
 
