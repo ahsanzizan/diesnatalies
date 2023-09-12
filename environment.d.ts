@@ -5,6 +5,7 @@ declare global {
             NODE_ENV: 'development' | 'production';
             PORT?: string;
             NEXTAUTH_SECRET: string;
+            DATABASE_URL: string;
         }
     }
 }
