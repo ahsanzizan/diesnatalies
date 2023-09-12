@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 export default function EditKasir() {
   const pathname = usePathname().split("/");
   const id = Number(pathname[pathname.length - 1]);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const [data, setData] = useState<{
     username: string | undefined;
@@ -25,10 +26,9 @@ export default function EditKasir() {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    async function getAllKasirs() {
+    async function getKasir() {
       try {
         const fetchData = await fetch(`/api/user`).then((res) => res.json());
-        console.log(fetchData.status);
 
         const getUsers: User[] = fetchData.users;
         const getKasirs = getUsers.filter((user) => user.role == "KASIR");
@@ -52,7 +52,7 @@ export default function EditKasir() {
       }
     }
 
-    getAllKasirs();
+    getKasir();
   }, [id]);
 
   if (data.role == "ADMIN") {
@@ -85,14 +85,19 @@ export default function EditKasir() {
       if (sendData.message != "success") {
         setLoading(false);
         toast.error("Something wrong", { id: toastId });
-        console.log(sendData);
+      } else if (sendData.message == "email already in use") {
+        toast.error("Email already in use", { id: toastId });
       } else {
         toast.success("Data sent successfully", { id: toastId });
-        return redirect("/admin/kasir");
+        setSuccess(true);
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  if (success) {
+    return redirect("/admin/kasir");
   }
 
   return (

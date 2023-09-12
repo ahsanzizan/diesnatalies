@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { getAllStand } from "@/lib/queries/standQueries";
+import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,8 +30,23 @@ export const POST = async (req: Request) => {
         const idUser = Number(session?.user?.id); // Get from session
         const nomorPesanan = data.get('nomorPesanan') as string;
         const totalPesanan = Number(data.get('totalPesanan') as string);
-        const idStand = Number(data.get('idStand') as string);
+        const nomorStand = Number(data.get('nomorStand') as string);
 
+        // Validate nomorPesanan 
+        const transaksis = await getAllTransaksi();
+        if (transaksis?.find(transaksi => transaksi.nomorPesanan == nomorPesanan)) {
+            return NextResponse.json({ status: 403, message: "nomorPesanan already exist" }, { status: 403 });
+        }
+
+        // Get idStand
+        const stands = await getAllStand();
+        const findStandWithNomor = stands?.find(stand => stand.nomorStand == nomorStand);
+        if (!findStandWithNomor) {
+            return NextResponse.json({ status: 403, message: "stand doesn't exist" }, { status: 403 });
+        }
+        const idStand = findStandWithNomor?.id as number;
+
+        console.log({ nomorPesanan, totalPesanan, idUser, idStand });
         await prisma.transaksi.create({ data: { nomorPesanan, totalPesanan, idUser, idStand } });
 
         return NextResponse.json({ status: 200, message: 'sucess' }, { status: 200 });
@@ -54,7 +71,7 @@ export const PUT = async (req: NextRequest) => {
         if (!findOne) {
             return NextResponse.json({ status: 404, message: "not found" }, { status: 404 });
         }
-        
+
         const data = await req.formData();
         const idUser = Number(session?.user?.id); // Get idKasir from session
         const nomorPesanan = data.get('nomorPesanan') as string;

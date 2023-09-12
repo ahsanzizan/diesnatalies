@@ -1,13 +1,16 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-export default function KasirPage() {
+export default function AdminPage() {
   const { data: session, status } = useSession();
+  if (!session?.user) {
+    return redirect("/auth/login");
+  }
 
   return (
     <>
-      {session?.user?.name}
-      <button onClick={() => signOut()}>Sign out</button>
+      <h1>Ini dashboard</h1>
     </>
   );
 }

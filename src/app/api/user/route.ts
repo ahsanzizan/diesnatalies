@@ -5,7 +5,7 @@ import { deleteUser, findUserByEmail, getAllUsers } from "@/lib/queries/userQuer
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export async function GET(req: NextRequest) {
     const queryParams = req.nextUrl.searchParams;
     const email = queryParams?.get('email');
 
@@ -37,6 +37,12 @@ export async function PUT(req: NextRequest) {
         const noHp = data.get('noHp') as string;
         const email = data.get('email') as string;
         const password = data.get('password') as string;
+
+        // Validate email
+        const getAll = await getAllUsers();
+        if (getAll?.find(user => user.email == email)) {
+            return NextResponse.json({ status: 403, message: "email already in use" }, { status: 403 });
+        }
 
         if (password != "") {
             const hashedPassword = hashPassword(password);

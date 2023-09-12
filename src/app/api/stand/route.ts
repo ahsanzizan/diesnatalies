@@ -47,7 +47,7 @@ export const POST = async (req: Request) => {
   }
 }
 
-export const PATCH = async (req: NextRequest) => {
+export const PUT = async (req: NextRequest) => {
   const session = await getServerSession();
   if (!session?.user?.role?.includes("ADMIN")) return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
 
@@ -60,11 +60,18 @@ export const PATCH = async (req: NextRequest) => {
 
   try {
     const data = await req.formData();
-    const nomorStand: number = Number(data.get("nomorStand") as string);
+    const nomorStand: number = Number(data.get("nomorStand") as string); // Unique
+
+    // Validate nomorStand
+    const getAll = await getAllStand();
+    if (getAll?.find(stand => stand.nomorStand == nomorStand)) {
+      return NextResponse.json({ status: 403, message: "nomorStand already exist" }, { status: 403 });
+    }
+
     const pemilik: string = data.get("pemilik") as string;
     const noHp: string = data.get("noHp") as string;
 
-    await prisma.stand.create({ data: { nomorStand, pemilik, noHp } });
+    await prisma.stand.update({ where: { id }, data: { nomorStand, pemilik, noHp } });
     return NextResponse.json({ status: 200, message: 'success' });
   } catch {
     return NextResponse.json({ status: 500, message: 'internal server error' });

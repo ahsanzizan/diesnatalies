@@ -4,12 +4,11 @@ import { useState } from "react";
 import type { ChangeEvent } from "react";
 import toast from "react-hot-toast";
 
-export default function CreateKasir() {
+export default function CreateTransaksi() {
   const [data, setData] = useState({
-    username: "",
-    email: "",
-    noHp: "",
-    password: "",
+    nomorPesanan: "",
+    totalPesanan: "",
+    nomorStand: "0",
   });
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,15 +23,14 @@ export default function CreateKasir() {
     const toastId = toast.loading("Loading...");
     const formData = new FormData();
 
-    formData.append("username", data.username);
-    formData.append("email", data.email);
-    formData.append("noHp", data.noHp);
-    formData.append("password", data.password);
+    formData.append("nomorPesanan", data.nomorPesanan);
+    formData.append("totalPesanan", data.totalPesanan);
+    formData.append("nomorStand", data.nomorStand);
 
     try {
       setLoading(true);
 
-      const sendData = await fetch("/api/user", {
+      const sendData = await fetch("/api/transaksi", {
         method: "POST",
         body: formData,
       }).then((res) => res.json());
@@ -40,8 +38,10 @@ export default function CreateKasir() {
       if (sendData.message == "success") {
         setLoading(false);
         toast.error("Something wrong", { id: toastId });
-      } else if (sendData.message == "email already in use") {
-        toast.error("Email already in use", { id: toastId });
+      } else if (sendData.message == "nomorPesanan already exist") {
+        toast.error("Nomor Pesanan already existed", { id: toastId });
+      } else if (sendData.message == "stand doesn't exist") {
+        toast.error("Stand doesn't exist", { id: toastId });
       } else {
         toast.success("Data sent successfully", { id: toastId });
         setSuccess(true);
@@ -61,48 +61,37 @@ export default function CreateKasir() {
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-              Username
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              name="username"
-              required
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full px-3 mb-6 md:mb-0">
-            <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-              Email
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="email"
-              name="email"
-              required
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full px-3 mb-6 md:mb-0">
-            <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-              Phone Number
+              Nomor Pesanan
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="number"
-              name="noHp"
+              name="nomorPesanan"
               required
               onChange={handleChange}
             />
           </div>
           <div className="w-full px-3 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-              Password
+              Total Pesanan
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="password"
-              name="password"
+              type="number"
+              name="totalPesanan"
+              required
+              step={100}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
+              Nomor Stand
+            </label>
+            <input
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="number"
+              name="nomorStand"
               required
               onChange={handleChange}
             />
