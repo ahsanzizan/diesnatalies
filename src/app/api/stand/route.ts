@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getAllStand } from "@/lib/queries/standQueries";
+import { getAllStands } from "@/lib/queries/standQueries";
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,11 +10,11 @@ export async function GET(req: NextRequest) {
 
   try {
     if (!id) {
-      const stands = await prisma.stand.findMany();
+      const stands = await prisma.stand.findMany({ include: { transaksis: true } });
       return NextResponse.json({ message: "success", stands }, { status: 200 });
     }
 
-    const getStandWithId = await prisma.stand.findUnique({ where: { id } });
+    const getStandWithId = await prisma.stand.findUnique({ where: { id }, include: { transaksis: true } });
     return NextResponse.json({ message: "success", stand: getStandWithId });
 
   } catch {
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const nomorStand: number = Number(data.get("nomorStand") as string); // Unique
 
     // Validate nomorStand
-    const getAll = await getAllStand();
+    const getAll = await getAllStands();
     if (getAll?.find(stand => stand.nomorStand == nomorStand)) {
       return NextResponse.json({ status: 403, message: "nomorStand already exist" }, { status: 403 });
     }
@@ -65,7 +65,7 @@ export async function PUT(req: NextRequest) {
     const nomorStand: number = Number(data.get("nomorStand") as string); // Unique
 
     // Validate nomorStand
-    const getAll = await getAllStand();
+    const getAll = await getAllStands();
     const prevNomorStand = getAll?.find(stand => stand.id == id)?.nomorStand;
     if (getAll?.find(stand => stand.nomorStand == nomorStand) && nomorStand != prevNomorStand) {
       return NextResponse.json({ status: 403, message: "nomorStand already exist" }, { status: 403 });

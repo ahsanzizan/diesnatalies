@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getAllStand } from "@/lib/queries/standQueries";
+import { getAllStands } from "@/lib/queries/standQueries";
 import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -40,7 +40,7 @@ export const POST = async (req: Request) => {
         }
 
         // Get idStand
-        const stands = await getAllStand();
+        const stands = await getAllStands();
         const findStandWithNomor = stands?.find(stand => stand.nomorStand == nomorStand);
         if (!findStandWithNomor) {
             return NextResponse.json({ status: 403, message: "stand doesn't exist" }, { status: 403 });

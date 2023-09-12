@@ -3,12 +3,12 @@ import { prisma } from "../prisma";
 import { User } from "@prisma/client";
 
 export async function getAllUsers(): Promise<User[] | null> {
-    const results = await prisma.user.findMany();
+    const results = await prisma.user.findMany({ include: { transaksis: true } });
     return results;
 }
 
 export async function findUserByEmail(email: string): Promise<User | null> {
-    const result = await prisma.user.findUnique({ where: { email } });
+    const result = await prisma.user.findUnique({ where: { email }, include: { transaksis: true } });
     return result;
 }
 
@@ -43,7 +43,7 @@ export async function loginAuth(email: string, password: string): Promise<loginA
 }
 
 export async function deleteUser(id: number) {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({ include: { transaksis: true } });
     const findUser = users.find(user => user.id === id);
     let res = null;
 

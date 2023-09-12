@@ -1,13 +1,13 @@
 import { Stand } from "@prisma/client";
 import { prisma } from "../prisma";
 
-export async function getAllStand(): Promise<Stand[] | null> {
-    const results = await prisma.stand.findMany();
+export async function getAllStands(): Promise<Stand[] | null> {
+    const results = await prisma.stand.findMany({ include: { transaksis: true } });
     return results;
 }
 
 export async function getStandByNomorStand(nomorStand: number): Promise<Stand | null> {
-    const result = await prisma.stand.findUnique({ where: { nomorStand } });
+    const result = await prisma.stand.findUnique({ where: { nomorStand }, include: { transaksis: true } });
     return result;
 }
 
