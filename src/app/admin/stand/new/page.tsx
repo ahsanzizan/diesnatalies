@@ -35,14 +35,14 @@ export default function CreateStand() {
         body: formData,
       }).then((res) => res.json());
 
-      if (sendData.message != "success") {
-        setLoading(false);
-        toast.error("Something went wrong", { id: toastId });
+      if (sendData.message == "success") {
+        toast.success("Data sent successfully", { id: toastId });
+        setSuccess(true);
       } else if (sendData.message == "nomorStand already exist") {
         toast.error("Nomor stand already exist", { id: toastId });
       } else {
-        toast.success("Data sent successfully", { id: toastId });
-        setSuccess(true);
+        setLoading(false);
+        toast.error("Something went wrong", { id: toastId });
       }
     } catch (error) {
       console.log(error);

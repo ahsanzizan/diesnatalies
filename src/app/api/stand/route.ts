@@ -30,6 +30,7 @@ export const POST = async (req: Request) => {
     const data = await req.formData();
     const nomorStand: number = Number(data.get("nomorStand") as string); // Unique
 
+    // Validate nomorStand
     const getAll = await getAllStand();
     if (getAll?.find(stand => stand.nomorStand == nomorStand)) {
       return NextResponse.json({ status: 403, message: "nomorStand already exist" }, { status: 403 });

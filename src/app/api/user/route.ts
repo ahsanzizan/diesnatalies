@@ -66,6 +66,12 @@ export async function POST(req: Request) {
         const password = hashPassword(data.get('password') as string);
         const email = data.get('email') as string;
 
+        // Validate email
+        const getAll = await getAllUsers();
+        if (getAll?.find(user => user.email == email)) {
+            return NextResponse.json({ status: 403, message: "email already in use" }, { status: 403 });
+        }
+
         await prisma.user.create({ data: { username, email, noHp, password } });
         return NextResponse.json({ status: 200, message: 'success' }, { status: 200 });
     } catch (error) {
