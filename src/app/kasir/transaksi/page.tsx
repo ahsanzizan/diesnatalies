@@ -45,11 +45,7 @@ export default async function AllTransaksi() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered?.map(async (transaksi, i) => {
-                    const stand = await prisma.stand.findUnique({
-                      where: { id: transaksi.idStand },
-                    });
-
+                  {filtered?.map((transaksi, i) => {
                     return (
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -59,7 +55,7 @@ export default async function AllTransaksi() {
                           {transaksi.totalPesanan}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          Stand {stand?.nomorStand}
+                          Stand {transaksi.stand.nomorStand}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {transaksi.timestamp.toDateString()}

@@ -43,13 +43,6 @@ export default async function AllKasir() {
                 </thead>
                 <tbody>
                   {getAll?.map(async (transaksi, i) => {
-                    const user = await prisma.user.findUnique({
-                      where: { id: transaksi.idUser },
-                    });
-                    const stand = await prisma.stand.findUnique({
-                      where: { id: transaksi.idStand },
-                    });
-
                     return (
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -59,10 +52,10 @@ export default async function AllKasir() {
                           {transaksi.totalPesanan}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {user?.username}
+                          {transaksi.user.username}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          Stand {stand?.nomorStand}
+                          Stand {transaksi.stand.nomorStand}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {transaksi.timestamp.toString()}

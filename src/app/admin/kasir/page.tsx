@@ -25,13 +25,16 @@ export default async function AllKasir() {
                       No
                     </th>
                     <th scope="col" className="px-6 py-4">
+                      Username
+                    </th>
+                    <th scope="col" className="px-6 py-4">
                       Email
                     </th>
                     <th scope="col" className="px-6 py-4">
                       HP
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      Username
+                      Jml. Transaksi
                     </th>
                     <th scope="col" className="px-6 py-4">
                       Action
@@ -44,15 +47,24 @@ export default async function AllKasir() {
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">{i + 1}</td>
                         <td className="whitespace-nowrap px-6 py-4">
+                          {kasir.username}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
                           {kasir.email}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {kasir.noHp}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {kasir.username}
+                          {kasir.transaksis.length}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 flex gap-1">
+                          <Link
+                            href={`/admin/kasir/${kasir.id}`}
+                            className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
+                          >
+                            Details
+                          </Link>
                           <Link
                             href={`/admin/kasir/edit/${kasir.id}`}
                             className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"

@@ -2,12 +2,12 @@ import { validatePassword } from "../passwordHash";
 import { prisma } from "../prisma";
 import { User } from "@prisma/client";
 
-export async function getAllUsers(): Promise<User[] | null> {
+export async function getAllUsers() {
     const results = await prisma.user.findMany({ include: { transaksis: true } });
     return results;
 }
 
-export async function findUserByEmail(email: string): Promise<User | null> {
+export async function findUserByEmail(email: string) {
     const result = await prisma.user.findUnique({ where: { email }, include: { transaksis: true } });
     return result;
 }

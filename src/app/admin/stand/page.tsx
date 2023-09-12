@@ -30,6 +30,9 @@ export default async function AllKasir() {
                       HP
                     </th>
                     <th scope="col" className="px-6 py-4">
+                      Jml. Transaksi
+                    </th>
+                    <th scope="col" className="px-6 py-4">
                       Action
                     </th>
                   </tr>
@@ -47,7 +50,16 @@ export default async function AllKasir() {
                         <td className="whitespace-nowrap px-6 py-4">
                           {stand.noHp}
                         </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {stand.transaksis.length}
+                        </td>
                         <td className="whitespace-nowrap px-6 py-4 flex gap-1">
+                          <Link
+                            href={`/admin/stand/${stand.id}`}
+                            className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
+                          >
+                            Details
+                          </Link>
                           <Link
                             href={`/admin/stand/edit/${stand.id}`}
                             className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
