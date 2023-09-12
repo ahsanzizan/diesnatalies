@@ -9,7 +9,7 @@ type DeleteButtonProps = {
 };
 
 export default function DeleteButton({ id }: DeleteButtonProps) {
-  const [suecces, setSuccess] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
   const router = useRouter();
 
   async function handleDelete(e: React.FormEvent) {
@@ -31,7 +31,8 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
     }
   }
 
-  if (suecces) {
+  if (success) {
+    setSuccess(false);
     router.refresh();
   }
 

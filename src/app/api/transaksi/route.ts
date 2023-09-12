@@ -1,3 +1,4 @@
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getAllStand } from "@/lib/queries/standQueries";
 import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
@@ -22,8 +23,8 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = async (req: Request) => {
-    const session = await getServerSession();
-    if (!session?.user?.role?.includes("KASIR")) return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+    const session = await getServerSession(authOptions);
+    if (session?.user?.role != "KASIR") return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
 
     try {
         const data = await req.formData();
@@ -49,7 +50,7 @@ export const POST = async (req: Request) => {
         console.log({ nomorPesanan, totalPesanan, idUser, idStand });
         await prisma.transaksi.create({ data: { nomorPesanan, totalPesanan, idUser, idStand } });
 
-        return NextResponse.json({ status: 200, message: 'sucess' }, { status: 200 });
+        return NextResponse.json({ status: 200, message: 'success' }, { status: 200 });
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });
     }

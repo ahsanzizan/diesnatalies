@@ -36,15 +36,15 @@ export default function CreateTransaksi() {
       }).then((res) => res.json());
 
       if (sendData.message == "success") {
-        setLoading(false);
-        toast.error("Something wrong", { id: toastId });
+        toast.success("Data sent successfully", { id: toastId });
+        setSuccess(true);
       } else if (sendData.message == "nomorPesanan already exist") {
         toast.error("Nomor Pesanan already existed", { id: toastId });
       } else if (sendData.message == "stand doesn't exist") {
         toast.error("Stand doesn't exist", { id: toastId });
       } else {
-        toast.success("Data sent successfully", { id: toastId });
-        setSuccess(true);
+        console.log(sendData);
+        toast.error("Something went wrong", { id: toastId });
       }
     } catch (error) {
       console.log(error);
