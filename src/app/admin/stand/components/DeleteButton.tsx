@@ -26,14 +26,14 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
         setSuccess(true);
         toast.success("Data sent successfully", { id: toastId });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error);
     }
   }
 
   if (success) {
-    router.refresh();
     setSuccess(false);
+    router.refresh();
   }
 
   return (

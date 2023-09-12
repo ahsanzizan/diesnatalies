@@ -43,8 +43,8 @@ export async function POST(req: Request) {
 
     await prisma.stand.create({ data: { nomorStand, pemilik, noHp } });
 
-    return NextResponse.json({ status: 200, message: 'sucess' }, { status: 200 });
-  } catch {
+    return NextResponse.json({ status: 200, message: 'success' }, { status: 200 });
+  } catch (error) {
     return NextResponse.json({ status: 500, message: 'internal server error' });
   }
 }

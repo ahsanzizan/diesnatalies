@@ -41,6 +41,7 @@ export default function CreateStand() {
       } else if (sendData.message == "nomorStand already exist") {
         toast.error("Nomor stand already exist", { id: toastId });
       } else {
+        console.log(sendData);
         toast.error("Something went wrong", { id: toastId });
       }
     } catch (error: any) {
