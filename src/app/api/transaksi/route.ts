@@ -11,11 +11,11 @@ export const GET = async (req: NextRequest) => {
 
     try {
         if (!id) {
-            const transaksis = await prisma.transaksi.findMany();
+            const transaksis = await prisma.transaksi.findMany({ include: { user: true, stand: true } });
             return NextResponse.json({ message: "success", transaksis }, { status: 200 });
         }
 
-        const getStandWithId = await prisma.transaksi.findUnique({ where: { id } });
+        const getStandWithId = await prisma.transaksi.findUnique({ where: { id }, include: { user: true, stand: true } });
         return NextResponse.json({ message: "success", stand: getStandWithId });
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });
@@ -68,7 +68,7 @@ export const PUT = async (req: NextRequest) => {
     }
 
     try {
-        const findOne = await prisma.transaksi.findUnique({ where: { id } });
+        const findOne = await prisma.transaksi.findUnique({ where: { id }, include: { user: true, stand: true } });
         if (!findOne) {
             return NextResponse.json({ status: 404, message: "not found" }, { status: 404 });
         }
@@ -98,7 +98,7 @@ export const DELETE = async (req: NextRequest) => {
     }
 
     try {
-        const findOne = await prisma.transaksi.findUnique({ where: { id } });
+        const findOne = await prisma.transaksi.findUnique({ where: { id }, include: { user: true, stand: true } });
         if (!findOne) {
             return NextResponse.json({ status: 404, message: "not found" }, { status: 404 });
         }
