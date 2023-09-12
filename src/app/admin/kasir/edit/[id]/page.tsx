@@ -152,7 +152,7 @@ export default function EditKasir() {
           type="submit"
           className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-sm transition duration-300"
         >
-          Edit
+          Save
         </button>
       </form>
     </>

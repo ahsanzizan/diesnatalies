@@ -10,9 +10,7 @@ export default function AdminPage() {
 
   return (
     <>
-      <div className="h-screen">
-        <h1>Ini dashboard</h1>
-      </div>
+      <h1>Ini dashboard</h1>
     </>
   );
 }

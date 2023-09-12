@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getAllStand } from "@/lib/queries/standQueries";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,12 +23,18 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = async (req: Request) => {
-  const session = await getServerSession();
-  if (!session?.user?.role?.includes("ADMIN")) return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
-  
+  const session = await getServerSession(authOptions);
+  if (session?.user?.role != "ADMIN") return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+
   try {
     const data = await req.formData();
-    const nomorStand: number = Number(data.get("nomorStand") as string);
+    const nomorStand: number = Number(data.get("nomorStand") as string); // Unique
+
+    const getAll = await getAllStand();
+    if (getAll?.find(stand => stand.nomorStand == nomorStand)) {
+      return NextResponse.json({ status: 403, message: "nomorStand already exist" }, { status: 403 });
+    }
+
     const pemilik: string = data.get("pemilik") as string;
     const noHp: string = data.get("noHp") as string;
 
