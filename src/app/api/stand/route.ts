@@ -1,10 +1,10 @@
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getAllStand } from "@/lib/queries/standQueries";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export async function GET(req: NextRequest) {
   const queryParams = req.nextUrl.searchParams;
   const id = Number(queryParams?.get('id'));
 
@@ -22,9 +22,11 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
-export const POST = async (req: Request) => {
+export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  if (session?.user?.role != "ADMIN") return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+  if (session?.user?.role != "ADMIN") {
+    return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+  }
 
   try {
     const data = await req.formData();
@@ -47,9 +49,9 @@ export const POST = async (req: Request) => {
   }
 }
 
-export const PUT = async (req: NextRequest) => {
-  const session = await getServerSession();
-  if (!session?.user?.role?.includes("ADMIN")) return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+export async function PUT(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (session?.user?.role != "ADMIN") return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
 
   const queryParams = req.nextUrl.searchParams;
   const id = Number(queryParams?.get('id'));
@@ -64,7 +66,8 @@ export const PUT = async (req: NextRequest) => {
 
     // Validate nomorStand
     const getAll = await getAllStand();
-    if (getAll?.find(stand => stand.nomorStand == nomorStand)) {
+    const prevNomorStand = getAll?.find(stand => stand.id == id)?.nomorStand;
+    if (getAll?.find(stand => stand.nomorStand == nomorStand) && nomorStand != prevNomorStand) {
       return NextResponse.json({ status: 403, message: "nomorStand already exist" }, { status: 403 });
     }
 
@@ -73,7 +76,8 @@ export const PUT = async (req: NextRequest) => {
 
     await prisma.stand.update({ where: { id }, data: { nomorStand, pemilik, noHp } });
     return NextResponse.json({ status: 200, message: 'success' });
-  } catch {
+  } catch (error) {
+    console.log(error)
     return NextResponse.json({ status: 500, message: 'internal server error' });
   }
 }

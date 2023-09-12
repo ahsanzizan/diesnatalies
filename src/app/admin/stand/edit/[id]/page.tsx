@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 export default function EditKasir() {
   const pathname = usePathname().split("/");
   const id = Number(pathname[pathname.length - 1]);
+  const [redirectBack, setRedirectBack] = useState<boolean>(false);
 
   const [data, setData] = useState<{
     nomorStand: string | undefined;
@@ -26,7 +27,7 @@ export default function EditKasir() {
         const fetchData = await fetch(`/api/stand`).then((res) => res.json());
 
         const getStands: Stand[] = fetchData.stands;
-        getStands.every((stand) => {
+        getStands.every((stand, i) => {
           if (stand.id == id) {
             setData({
               nomorStand: stand.nomorStand.toString(),
@@ -35,6 +36,10 @@ export default function EditKasir() {
             });
 
             return false;
+          } else {
+            if (i == getStands.length - 1) {
+              setRedirectBack(true);
+            }
           }
 
           return true;
@@ -69,17 +74,22 @@ export default function EditKasir() {
         body: formData,
       }).then((res) => res.json());
 
-      if (sendData.message != "success") {
+      if (sendData.message == "success") {
+        toast.success("Data sent successfully", { id: toastId });
+        setRedirectBack(true);
+      } else if (sendData.message == "nomorStand already exist") {
+        toast.error("Nomor stand already exist", { id: toastId });
+      } else {
         setLoading(false);
         toast.error("Something went wrong", { id: toastId });
-        console.log(sendData);
-      } else {
-        toast.success("Data sent successfully", { id: toastId });
-        return redirect("/admin/kasir");
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  if (redirectBack) {
+    return redirect("/admin/stand");
   }
 
   return (

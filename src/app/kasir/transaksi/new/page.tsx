@@ -52,7 +52,7 @@ export default function CreateTransaksi() {
   }
 
   if (success) {
-    return redirect("/admin/kasir");
+    return redirect("/kasir/transaksi");
   }
 
   return (
