@@ -2,9 +2,15 @@ import Link from "next/link";
 import DeleteButton from "./components/DeleteButton";
 import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function AllTransaksi() {
-  const transaksis = await getAllTransaksi();
+  const session = await getServerSession(authOptions);
+  const getAll = await getAllTransaksi();
+  const filtered = getAll?.filter(
+    (transaksi) => transaksi.idUser == Number(session?.user?.id)
+  );
 
   return (
     <>
@@ -28,9 +34,6 @@ export default async function AllTransaksi() {
                       Total Pesanan
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      User
-                    </th>
-                    <th scope="col" className="px-6 py-4">
                       Stand
                     </th>
                     <th scope="col" className="px-6 py-4">
@@ -42,10 +45,7 @@ export default async function AllTransaksi() {
                   </tr>
                 </thead>
                 <tbody>
-                  {transaksis?.map(async (transaksi, i) => {
-                    const user = await prisma.user.findUnique({
-                      where: { id: transaksi.idUser },
-                    });
+                  {filtered?.map(async (transaksi, i) => {
                     const stand = await prisma.stand.findUnique({
                       where: { id: transaksi.idStand },
                     });
@@ -59,9 +59,6 @@ export default async function AllTransaksi() {
                           {transaksi.totalPesanan}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {user?.email}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
                           Stand {stand?.nomorStand}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -69,7 +66,7 @@ export default async function AllTransaksi() {
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 flex gap-1">
                           <Link
-                            href={`/admin/kasir/edit/${transaksi.id}`}
+                            href={`/kasir/transaksi/edit/${transaksi.id}`}
                             className="bg-sky-500 hover:bg-sky-600 py-2 px-4 rounded-md font-bold"
                           >
                             Edit

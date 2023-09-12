@@ -60,7 +60,7 @@ export const PUT = async (req: NextRequest) => {
     const queryParams = req.nextUrl.searchParams;
     const id = Number(queryParams?.get('id'));
 
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.role?.includes("KASIR")) return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
 
     if (!id) {
@@ -74,12 +74,12 @@ export const PUT = async (req: NextRequest) => {
         }
 
         const data = await req.formData();
-        const idUser = Number(session?.user?.id); // Get idKasir from session
-        const nomorPesanan = data.get('nomorPesanan') as string;
+        if (data.get('totalPesanan') == "") {
+            return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+        }
         const totalPesanan = Number(data.get('totalPesanan') as string);
-        const idStand = Number(data.get('idStand') as string);
 
-        await prisma.transaksi.update({ where: { id }, data: { idUser, nomorPesanan, totalPesanan, idStand } });
+        await prisma.transaksi.update({ where: { id }, data: { totalPesanan } });
         return NextResponse.json({ status: 200, message: 'success' });
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });

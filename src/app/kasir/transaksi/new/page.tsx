@@ -1,6 +1,7 @@
 "use client";
+import { Stand } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import toast from "react-hot-toast";
 
@@ -12,6 +13,20 @@ export default function CreateTransaksi() {
   });
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [stands, setStands] = useState<Stand[] | null>();
+
+  useEffect(() => {
+    async function getStands() {
+      try {
+        const getAll = await fetch("/api/stand").then((res) => res.json());
+        setStands(getAll?.stands);
+      } catch (error: any) {
+        toast.error(error);
+      }
+    }
+
+    getStands();
+  });
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -80,7 +95,6 @@ export default function CreateTransaksi() {
               type="number"
               name="totalPesanan"
               required
-              step={100}
               onChange={handleChange}
             />
           </div>
@@ -88,13 +102,21 @@ export default function CreateTransaksi() {
             <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
               Nomor Stand
             </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="number"
+            <select
               name="nomorStand"
               required
-              onChange={handleChange}
-            />
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              onChange={(e) => setData({ ...data, nomorStand: e.target.value })}
+            >
+              <option value="" disabled selected>
+                Pilih Nomor Stand
+              </option>
+              {stands?.map((stand, i) => (
+                <option value={stand.nomorStand} key={i}>
+                  {stand.nomorStand}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

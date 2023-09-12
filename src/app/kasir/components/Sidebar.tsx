@@ -52,7 +52,7 @@ export default function Sidebar({ nav }: SidebarOptions) {
                     />
                   </svg>
                   <span className="ml-3 flex-1 whitespace-nowrap">
-                    Transaksi
+                    Transaksi Saya
                   </span>
                 </Link>
               </li>
