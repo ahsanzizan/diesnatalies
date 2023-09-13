@@ -13,7 +13,7 @@ export default async function AllTransaksi() {
   );
 
   // Total all pesanan transaksi
-  const getTotal = getAll
+  const getTotal = filtered
     ?.map((transaksi) => transaksi.totalPesanan)
     .reduce((partialSum, a) => partialSum + a, 0);
 
@@ -89,7 +89,9 @@ export default async function AllTransaksi() {
           </div>
         </div>
       </div>
-      <p>Total Transaksi Saya: <span className="font-bold">{getTotal}</span></p>
+      <p>
+        Total Transaksi Saya: <span className="font-bold">{getTotal}</span>
+      </p>
     </>
   );
 }
