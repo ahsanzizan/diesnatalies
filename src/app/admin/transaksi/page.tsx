@@ -15,12 +15,6 @@ export default async function AllKasir() {
         <div className="sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
             <div className="overflow-x-auto">
-              <Link
-                href={"/kasir/transaksi/new"}
-                className="inline-flex items-center gap-2 py-2 px-4 bg-gray-300 hover:bg-gray-400 transition-all font-semibold rounded-md"
-              >
-                Add Transaksi
-              </Link>
               <table className="min-w-full text-left text-sm">
                 <thead className="border-b font-medium dark:border-neutral-500">
                   <tr>
@@ -58,7 +52,12 @@ export default async function AllKasir() {
                           Stand {transaksi.stand.nomorStand}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {transaksi.timestamp.toString()}
+                          {new Date(
+                            new Intl.DateTimeFormat("en-US", {
+                              timeZone: "Asia/Jakarta",
+                              hour12: false,
+                            }).format(transaksi.timestamp)
+                          ).toString()}
                         </td>
                       </tr>
                     );

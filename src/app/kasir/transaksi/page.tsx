@@ -1,9 +1,9 @@
 import Link from "next/link";
 import DeleteButton from "./components/DeleteButton";
 import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
-import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { DateTime } from "luxon";
 
 export default async function AllTransaksi() {
   const session = await getServerSession(authOptions);
@@ -46,6 +46,12 @@ export default async function AllTransaksi() {
                 </thead>
                 <tbody>
                   {filtered?.map((transaksi, i) => {
+                    const timestamp = DateTime.fromISO(
+                      transaksi.timestamp.toISOString()
+                    );
+
+                    const convertedToWIB = timestamp.setZone("Asia/Jakarta");
+
                     return (
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -58,7 +64,7 @@ export default async function AllTransaksi() {
                           Stand {transaksi.stand.nomorStand}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {transaksi.timestamp.toDateString()}
+                          {convertedToWIB.toFormat("yyyy-MM-dd HH:mm:ss a")}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 flex gap-1">
                           <Link
