@@ -39,12 +39,12 @@ export default function CreateKasir() {
 
       if (sendData.message == "success") {
         setLoading(false);
-        toast.error("Something wrong", { id: toastId });
+        toast.success("Data sent successfully", { id: toastId });
+        setSuccess(true);
       } else if (sendData.message == "email already in use") {
         toast.error("Email already in use", { id: toastId });
       } else {
-        toast.success("Data sent successfully", { id: toastId });
-        setSuccess(true);
+        toast.error("Something went wrong", { id: toastId });
       }
     } catch (error) {
       console.log(error);

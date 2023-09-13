@@ -36,7 +36,7 @@ export default async function AllKasir() {
                   </tr>
                 </thead>
                 <tbody>
-                  {getAll?.map(async (transaksi, i) => {
+                  {getAll?.map((transaksi, i) => {
                     return (
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -46,10 +46,20 @@ export default async function AllKasir() {
                           {transaksi.totalPesanan}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {transaksi.user.username}
+                          <Link
+                            href={`/admin/kasir/${transaksi.user.id}`}
+                            className="text-blue-500 hover:underline hover:text-blue-700"
+                          >
+                            {transaksi.user.username}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          Stand {transaksi.stand.nomorStand}
+                          <Link
+                            href={`/admin/stand/${transaksi.user.id}`}
+                            className="text-blue-500 hover:underline hover:text-blue-700"
+                          >
+                            Stand {transaksi.stand.nomorStand}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {new Date(
@@ -68,7 +78,9 @@ export default async function AllKasir() {
           </div>
         </div>
       </div>
-      <p>Total Transaksi: {getTotal}</p>
+      <p>
+        Total Transaksi Saya: <span className="font-bold">{getTotal}</span>
+      </p>
     </>
   );
 }

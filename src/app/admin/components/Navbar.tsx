@@ -49,12 +49,9 @@ export default function Navbar({ nav, setNav, username }: NavbarOptions) {
                 />
               </svg>
             </button>
-            <Link
-              href="/"
-              className="text-xl font-bold flex items-center lg:ml-2.5 text-red-500"
-            >
+            <p className="text-xl font-bold flex items-center lg:ml-2.5 text-red-500">
               Deeznataleez
-            </Link>
+            </p>
           </div>
 
           <div className="group inline-block">
