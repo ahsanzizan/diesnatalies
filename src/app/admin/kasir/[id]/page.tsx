@@ -1,5 +1,6 @@
 import { getAllStands } from "@/lib/queries/standQueries";
 import { getAllUsers } from "@/lib/queries/userQueries";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -71,6 +72,12 @@ export default async function ViewKasir({ params }: any) {
                       (stand) => stand.id == transaksi.idStand
                     );
 
+                    const timestamp = DateTime.fromISO(
+                      transaksi.timestamp.toISOString()
+                    );
+
+                    const convertedToWIB = timestamp.setZone("Asia/Jakarta");
+
                     return (
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -88,12 +95,7 @@ export default async function ViewKasir({ params }: any) {
                           </Link>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {new Date(
-                            new Intl.DateTimeFormat("en-US", {
-                              timeZone: "Asia/Jakarta",
-                              hour12: false,
-                            }).format(transaksi.timestamp)
-                          ).toString()}
+                          {convertedToWIB.toFormat("yyyy-MM-dd HH:mm:ss a")}
                         </td>
                       </tr>
                     );

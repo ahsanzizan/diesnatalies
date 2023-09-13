@@ -1,6 +1,7 @@
 import { convertTZ } from "@/lib/dateUtils";
 import { prisma } from "@/lib/prisma";
 import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
+import { DateTime } from "luxon";
 import Link from "next/link";
 
 export default async function AllKasir() {
@@ -37,6 +38,12 @@ export default async function AllKasir() {
                 </thead>
                 <tbody>
                   {getAll?.map((transaksi, i) => {
+                    const timestamp = DateTime.fromISO(
+                      transaksi.timestamp.toISOString()
+                    );
+
+                    const convertedToWIB = timestamp.setZone("Asia/Jakarta");
+
                     return (
                       <tr className="border-b dark:border-neutral-500" key={i}>
                         <td className="whitespace-nowrap px-6 py-4">
@@ -55,19 +62,14 @@ export default async function AllKasir() {
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           <Link
-                            href={`/admin/stand/${transaksi.user.id}`}
+                            href={`/admin/stand/${transaksi.stand.id}`}
                             className="text-blue-500 hover:underline hover:text-blue-700"
                           >
                             Stand {transaksi.stand.nomorStand}
                           </Link>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {new Date(
-                            new Intl.DateTimeFormat("en-US", {
-                              timeZone: "Asia/Jakarta",
-                              hour12: false,
-                            }).format(transaksi.timestamp)
-                          ).toString()}
+                          {convertedToWIB.toFormat("yyyy-MM-dd HH:mm:ss a")}
                         </td>
                       </tr>
                     );
