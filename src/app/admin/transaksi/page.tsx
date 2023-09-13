@@ -81,7 +81,7 @@ export default async function AllKasir() {
         </div>
       </div>
       <p>
-        Total Transaksi Saya: <span className="font-bold">{getTotal}</span>
+        Total Transaksi: <span className="font-bold">{getTotal}</span>
       </p>
     </>
   );
