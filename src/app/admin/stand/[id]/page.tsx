@@ -1,3 +1,4 @@
+import { numberWithCommas } from "@/lib/numberUtils";
 import { getAllStands } from "@/lib/queries/standQueries";
 import { getAllUsers } from "@/lib/queries/userQueries";
 import { DateTime } from "luxon";
@@ -102,7 +103,10 @@ export default async function ViewKasir({ params }: any) {
       </div>
 
       <p>
-        Total Transaksi : <span className="font-bold">{getTotal}</span>
+        Total Transaksi :{" "}
+        <span className="font-bold">
+          Rp. {numberWithCommas(getTotal as number)}
+        </span>
       </p>
     </>
   );

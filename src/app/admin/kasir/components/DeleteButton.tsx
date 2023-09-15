@@ -24,7 +24,7 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
         toast.error("Something wrong", { id: toastId });
       } else {
         setSuccess(true);
-        toast.success("Data sent successfully", { id: toastId });
+        toast.success("Deleted successfully", { id: toastId });
       }
     } catch (error) {
       console.log(error);

@@ -1,4 +1,5 @@
 import { convertTZ } from "@/lib/dateUtils";
+import { numberWithCommas } from "@/lib/numberUtils";
 import { prisma } from "@/lib/prisma";
 import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
 import { DateTime } from "luxon";
@@ -81,7 +82,10 @@ export default async function AllKasir() {
         </div>
       </div>
       <p>
-        Total Transaksi: <span className="font-bold">{getTotal}</span>
+        Total Transaksi:{" "}
+        <span className="font-bold">
+          Rp. {numberWithCommas(getTotal as number)}
+        </span>
       </p>
     </>
   );

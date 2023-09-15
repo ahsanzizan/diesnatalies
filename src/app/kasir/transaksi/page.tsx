@@ -4,6 +4,7 @@ import { getAllTransaksi } from "@/lib/queries/transaksiQueries";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { DateTime } from "luxon";
+import { numberWithCommas } from "@/lib/numberUtils";
 
 export default async function AllTransaksi() {
   const session = await getServerSession(authOptions);
@@ -90,7 +91,10 @@ export default async function AllTransaksi() {
         </div>
       </div>
       <p>
-        Total Transaksi Saya: <span className="font-bold">{getTotal}</span>
+        Total Transaksi Saya:{" "}
+        <span className="font-bold">
+          Rp. {numberWithCommas(getTotal as number)}
+        </span>
       </p>
     </>
   );
