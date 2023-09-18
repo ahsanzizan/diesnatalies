@@ -31,14 +31,6 @@ export default async function ViewKasir({ params }: any) {
         </div>
         <div className="w-full px-3 mb-6 md:mb-0">
           <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-            Email
-          </label>
-          <p className="appearance-none block w-full text-gray-700 rounded py-3 mb-3 leading-tight focus:outline-none focus:bg-white">
-            {user?.email}
-          </p>
-        </div>
-        <div className="w-full px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
             Phone Number
           </label>
           <p className="appearance-none block w-full text-gray-700 rounded py-3 mb-3 leading-tight focus:outline-none focus:bg-white">

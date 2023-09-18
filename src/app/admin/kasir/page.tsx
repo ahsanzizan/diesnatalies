@@ -28,9 +28,6 @@ export default async function AllKasir() {
                       Username
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      Email
-                    </th>
-                    <th scope="col" className="px-6 py-4">
                       HP
                     </th>
                     <th scope="col" className="px-6 py-4">
@@ -48,9 +45,6 @@ export default async function AllKasir() {
                         <td className="whitespace-nowrap px-6 py-4">{i + 1}</td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {kasir.username}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {kasir.email}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {kasir.noHp}

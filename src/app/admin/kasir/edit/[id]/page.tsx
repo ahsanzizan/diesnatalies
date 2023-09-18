@@ -12,13 +12,13 @@ export default function EditKasir() {
 
   const [data, setData] = useState<{
     username: string | undefined;
-    email: string | undefined;
+    nama: string | undefined;
     noHp: string | undefined;
     password: string | undefined;
     role: string | undefined;
   }>({
     username: "",
-    email: "",
+    nama: "",
     noHp: "",
     password: "",
     role: "",
@@ -36,7 +36,7 @@ export default function EditKasir() {
           if (kasir.id == id) {
             setData({
               username: kasir.username,
-              email: kasir.email,
+              nama: kasir.nama,
               noHp: kasir.noHp,
               password: kasir.password,
               role: kasir.role,
@@ -70,7 +70,7 @@ export default function EditKasir() {
     const formData = new FormData();
 
     formData.append("username", data.username as string);
-    formData.append("email", data.email as string);
+    formData.append("nama", data.nama as string);
     formData.append("noHp", data.noHp as string);
     formData.append("password", data.password as string);
 
@@ -85,8 +85,8 @@ export default function EditKasir() {
       if (sendData.message == "success") {
         toast.success("Data sent successfully", { id: toastId });
         setSuccess(true);
-      } else if (sendData.message == "email already in use") {
-        toast.error("Email already in use", { id: toastId });
+      } else if (sendData.message == "username already in use") {
+        toast.error("Username already in use", { id: toastId });
       } else {
         setLoading(false);
         toast.error("Something went wrong", { id: toastId });
@@ -118,13 +118,13 @@ export default function EditKasir() {
           </div>
           <div className="w-full px-3 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-              Email
+              Nama
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="email"
-              name="email"
-              defaultValue={data.email}
+              type="text"
+              name="nama"
+              defaultValue={data.nama}
               onChange={handleChange}
             />
           </div>

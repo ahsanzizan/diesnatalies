@@ -1,22 +1,14 @@
 import { authOptions } from "@/lib/auth";
 import { hashPassword } from "@/lib/passwordHash";
 import { prisma } from "@/lib/prisma";
-import { deleteUser, findUserByEmail, getAllUsers } from "@/lib/queries/userQueries";
+import { deleteUser, findUserByUname, getAllUsers } from "@/lib/queries/userQueries";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-    const queryParams = req.nextUrl.searchParams;
-    const email = queryParams?.get('email');
-
     try {
-        if (!email) {
-            const users = await getAllUsers();
-            return NextResponse.json({ message: "success", users }, { status: 200 });
-        }
-
-        const getUserWithEmail = await findUserByEmail(email);
-        return NextResponse.json({ message: "success", user: getUserWithEmail }, { status: 200 });
+        const users = await getAllUsers();
+        return NextResponse.json({ message: "success", users }, { status: 200 });
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });
     }
@@ -35,22 +27,22 @@ export async function PUT(req: NextRequest) {
         const data = await req.formData();
         const username = data.get('username') as string;
         const noHp = data.get('noHp') as string;
-        const email = data.get('email') as string;
+        const nama = data.get('nama') as string;
         const password = data.get('password') as string;
 
-        // Validate email
+        // Validate username
         const getAll = await getAllUsers();
-        if (getAll?.find(user => user.email == email)) {
-            return NextResponse.json({ status: 403, message: "email already in use" }, { status: 403 });
+        if (getAll?.find(user => user.username == username)) {
+            return NextResponse.json({ status: 403, message: "username already in use" }, { status: 403 });
         }
 
         if (password != "") {
             const hashedPassword = hashPassword(password);
-            await prisma.user.update({ where: { id }, data: { username, noHp, email, password: hashedPassword } });
+            await prisma.user.update({ where: { id }, data: { username, noHp, nama, password: hashedPassword } });
             return NextResponse.json({ message: "success" }, { status: 200 });
         }
 
-        await prisma.user.update({ where: { id }, data: { username, noHp, email } });
+        await prisma.user.update({ where: { id }, data: { username, noHp, nama } });
         return NextResponse.json({ message: "success" }, { status: 200 });
 
     } catch (error) {
@@ -70,15 +62,15 @@ export async function POST(req: Request) {
         const username = data.get('username') as string;
         const noHp = data.get('noHp') as string;
         const password = hashPassword(data.get('password') as string);
-        const email = data.get('email') as string;
+        const nama = data.get('nama') as string;
 
-        // Validate email
+        // Validate username
         const getAll = await getAllUsers();
-        if (getAll?.find(user => user.email == email)) {
-            return NextResponse.json({ status: 403, message: "email already in use" }, { status: 403 });
+        if (getAll?.find(user => user.username == username)) {
+            return NextResponse.json({ status: 403, message: "username already in use" }, { status: 403 });
         }
 
-        await prisma.user.create({ data: { username, email, noHp, password } });
+        await prisma.user.create({ data: { username, nama, noHp, password } });
         return NextResponse.json({ status: 200, message: 'success' }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ status: 500, message: "internal server error" }, { status: 500 });

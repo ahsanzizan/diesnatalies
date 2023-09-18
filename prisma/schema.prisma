@@ -20,8 +20,8 @@ model Stand {
 
 model User {
   id         Int         @id @default(autoincrement())
-  username   String
-  email      String      @unique
+  username   String      @unique
+  nama       String
   noHp       String
   password   String
   role       Role        @default(KASIR)

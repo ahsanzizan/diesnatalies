@@ -9,7 +9,7 @@ import type { ChangeEvent } from "react";
 export default function Login() {
   const { data: session, status } = useSession();
   const [formValues, setFormValues] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,7 +31,7 @@ export default function Login() {
       setLoading(true);
       const res = await signIn("credentials", {
         redirect: false,
-        email: formValues.email,
+        username: formValues.username,
         password: formValues.password,
         callbackUrl: "/",
       });
@@ -40,13 +40,14 @@ export default function Login() {
         setLoading(false);
         toast.error(
           res.error == "CredentialsSignin"
-            ? "Email/Password Salah"
+            ? "Username/Password Salah"
             : "Internal server error",
           {
             id: toastId,
           }
         );
       } else {
+        setLoading(false);
         toast.success("Login sukses", {
           id: toastId,
         });
@@ -70,9 +71,9 @@ export default function Login() {
           <div>
             <input
               className="w-full p-3 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600"
-              type="email"
-              name="email"
-              placeholder="Email"
+              type="text"
+              name="username"
+              placeholder="username"
               onChange={handleChange}
               required
             />

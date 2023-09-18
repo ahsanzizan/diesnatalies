@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 export default function CreateKasir() {
   const [data, setData] = useState({
     username: "",
-    email: "",
+    nama: "",
     noHp: "",
     password: "",
   });
@@ -25,7 +25,7 @@ export default function CreateKasir() {
     const formData = new FormData();
 
     formData.append("username", data.username);
-    formData.append("email", data.email);
+    formData.append("nama", data.nama);
     formData.append("noHp", data.noHp);
     formData.append("password", data.password);
 
@@ -41,8 +41,8 @@ export default function CreateKasir() {
         setLoading(false);
         toast.success("Data sent successfully", { id: toastId });
         setSuccess(true);
-      } else if (sendData.message == "email already in use") {
-        toast.error("Email already in use", { id: toastId });
+      } else if (sendData.message == "username already in use") {
+        toast.error("Username already in use", { id: toastId });
       } else {
         toast.error("Something went wrong", { id: toastId });
       }
@@ -73,12 +73,12 @@ export default function CreateKasir() {
           </div>
           <div className="w-full px-3 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
-              Email
+              Nama
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="email"
-              name="email"
+              type="text"
+              name="nama"
               required
               onChange={handleChange}
             />

@@ -7,8 +7,8 @@ export async function getAllUsers() {
     return results;
 }
 
-export async function findUserByEmail(email: string) {
-    const result = await prisma.user.findUnique({ where: { email }, include: { transaksis: true } });
+export async function findUserByUname(username: string) {
+    const result = await prisma.user.findUnique({ where: { username }, include: { transaksis: true } });
     return result;
 }
 
@@ -17,8 +17,8 @@ type loginAuth = {
     user?: User;
 }
 
-export async function loginAuth(email: string, password: string): Promise<loginAuth> {
-    const findUser = await findUserByEmail(email);
+export async function loginAuth(username: string, password: string): Promise<loginAuth> {
+    const findUser = await findUserByUname(username);
 
     let result: loginAuth = {
         status: "INVALID",

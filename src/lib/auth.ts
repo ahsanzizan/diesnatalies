@@ -1,8 +1,8 @@
-import type { NextAuthOptions } from "next-auth";
+import type { DefaultUser, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
-import { findUserByEmail, loginAuth } from "./queries/userQueries";
+import { findUserByUname, loginAuth } from "./queries/userQueries";
 
 declare module "next-auth" {
     /**
@@ -21,10 +21,13 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
     interface JWT extends DefaultJWT {
+        username: string;
+        nama: string;
         role: string;
         id: string;
     }
 }
+
 export const authOptions: NextAuthOptions = {
     pages: {
         signIn: "/auth/login",
@@ -36,10 +39,10 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Log In",
             credentials: {
-                email: {
-                    label: "Email",
-                    type: "email",
-                    placeholder: "admin@smktelkom-mlg.sch.id",
+                username: {
+                    label: "Username",
+                    type: "username",
+                    placeholder: "username admin",
                 },
                 password: {
                     label: "Password",
@@ -49,15 +52,15 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 let findUser = await loginAuth(
-                    credentials?.email as string || "",
+                    credentials?.username as string || "",
                     credentials?.password as string || ""
                 );
 
                 if (findUser.status != "SUCCESS") return null;
                 const user = {
                     id: findUser.user?.id as any,
-                    username: findUser.user?.username,
-                    email: findUser.user?.email,
+                    username: credentials?.username,
+                    nama: findUser.user?.nama,
                     role: findUser.user?.role || "KASIR",
                 };
 
@@ -66,21 +69,17 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token }) {
-            if (token.email) {
-                let findUser = await findUserByEmail(token.email!);
-                token.name = findUser?.username || token?.name;
-                token.role = findUser?.role || "KASIR";
-                token.id = findUser?.id as any;
-            }
-            return token;
+        async jwt({ token, user }) {
+            return { ...token, ...user };
         },
         async session({ session, token }) {
-            if (session.user) {
-                let findUser = await findUserByEmail(session.user?.email!);
-                session.user.username = findUser?.username || session?.user?.username;
-                session.user.role = findUser?.role || "KASIR";
-                session.user.id = findUser?.id.toString() as string;
+            if (token.username) {
+                if (session.user) {
+                    let findUser = await findUserByUname(token.username);
+                    session.user.username = findUser?.username || token.username;
+                    session.user.role = findUser?.role || "KASIR";
+                    session.user.id = findUser?.id.toString() as string;
+                }
             }
             return session;
         },

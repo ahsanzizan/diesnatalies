@@ -68,8 +68,8 @@ export default function EditTransaksi() {
       if (sendData.message == "success") {
         toast.success("Data sent successfully", { id: toastId });
         setSuccess(true);
-      } else if (sendData.message == "email already in use") {
-        toast.error("Email already in use", { id: toastId });
+      } else if (sendData.message == "username already in use") {
+        toast.error("username already in use", { id: toastId });
       } else {
         setLoading(false);
         toast.error("Something wrong", { id: toastId });

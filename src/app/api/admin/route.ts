@@ -10,9 +10,9 @@ export const POST = async (req: NextRequest) => {
         const username = data.get('username') as string;
         const noHp = data.get('noHp') as string;
         const password = hashPassword(data.get('password') as string);
-        const email = data.get('email') as string;
+        const nama = data.get('nama') as string;
 
-        await prisma.user.create({ data: { username, email, noHp, password, role: "ADMIN" } });
+        await prisma.user.create({ data: { username, nama, noHp, password, role: "ADMIN" } });
         return NextResponse.json({ status: 200, message: 'success' }, { status: 200 });
     } catch {
         return NextResponse.json({ status: 500, message: "internal server error" }, { status: 500 });
