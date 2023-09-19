@@ -6,8 +6,18 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+    const queryParams = req.nextUrl.searchParams;
+    const id = Number(queryParams?.get('id'));
+    if (!id) {
+        return NextResponse.json({ status: 403, message: 'forbidden' }, { status: 403 });
+    }
+
     try {
         const users = await getAllUsers();
+        if (id) {
+            const user = users.find(user => user.id == id);
+            return NextResponse.json({ message: 'success', user }, { status: 200 });
+        }
         return NextResponse.json({ message: "success", users }, { status: 200 });
     } catch {
         return NextResponse.json({ status: 500, message: 'internal server error' });

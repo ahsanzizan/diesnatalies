@@ -47,7 +47,6 @@ export const POST = async (req: Request) => {
         }
         const idStand = findStandWithNomor?.id as number;
 
-        console.log({ nomorPesanan, totalPesanan, idUser, idStand });
         await prisma.transaksi.create({ data: { nomorPesanan, totalPesanan, idUser, idStand } });
 
         return NextResponse.json({ status: 200, message: 'success' }, { status: 200 });
@@ -90,8 +89,8 @@ export const DELETE = async (req: NextRequest) => {
     const queryParams = req.nextUrl.searchParams;
     const id = Number(queryParams?.get("id"));
 
-    const session = await getServerSession();
-    if (!session?.user?.role?.includes("KASIR")) return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
+    const session = await getServerSession(authOptions);
+    if (session?.user?.role != "KASIR") return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });
 
     if (!id) {
         return NextResponse.json({ status: 403, message: "forbidden" }, { status: 403 });

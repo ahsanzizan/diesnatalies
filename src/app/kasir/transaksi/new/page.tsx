@@ -1,19 +1,23 @@
 "use client";
 import { Stand } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import toast from "react-hot-toast";
 
 export default function CreateTransaksi() {
+  const { data: session, status } = useSession();
   const [data, setData] = useState({
     nomorPesanan: "",
     totalPesanan: "",
-    nomorStand: "0",
+    nomorStand: "",
   });
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [stands, setStands] = useState<Stand[] | null>();
+  const [nomorPesanan, setNomorPesanan] = useState<string>("");
+  const [trannsaksisCount, setTrannsaksisCount] = useState<number>(0);
 
   useEffect(() => {
     async function getStands() {
@@ -25,8 +29,25 @@ export default function CreateTransaksi() {
       }
     }
 
+    async function getUser() {
+      try {
+        const getUser = await fetch(`/api/user?id=${session?.user?.id}`).then(
+          (res) => res.json()
+        );
+
+        if (getUser.transaksis[getUser.transaksis.length - 1]) {
+          setTrannsaksisCount(Number(getUser.transaksis[getUser.transaksis.length - 1].nomorPesanan.split("-")[1]));
+        }
+      } catch (error: any) {
+        toast.error(error);
+      }
+    }
+
     getStands();
-  });
+    if (data.nomorStand != "") {
+      setNomorPesanan(`${data.nomorStand}-${trannsaksisCount + 1}`);
+    }
+  }, [data.nomorStand, session?.user?.id, trannsaksisCount]); 
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -38,7 +59,7 @@ export default function CreateTransaksi() {
     const toastId = toast.loading("Loading...");
     const formData = new FormData();
 
-    formData.append("nomorPesanan", data.nomorPesanan);
+    formData.append("nomorPesanan", nomorPesanan);
     formData.append("totalPesanan", data.totalPesanan);
     formData.append("nomorStand", data.nomorStand);
 
@@ -80,9 +101,11 @@ export default function CreateTransaksi() {
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="number"
+              type="text"
               name="nomorPesanan"
               required
+              disabled
+              value={nomorPesanan}
               onChange={handleChange}
             />
           </div>
